@@ -4,7 +4,7 @@ import UserMenu from '@/components/UserMenu';
 
 const InnerBar = () => {
 	return (
-		<nav className="h-[calc(100vh-3rem)] col-start-1 col-end-2 flex flex-col items-center justify-center bg-discord-sidebar ">
+		<nav className="min-w-[240px] h-[calc(100vh-3rem)] flex flex-col items-center justify-center bg-discord-sidebar ">
 			<section className="flex-grow">Items</section>
 			<section className="bg-discord-user-background h-12 p-2 w-full flex items-center justify-between">
 				<div className="flex flex-grow items-center cursor-pointer hover:bg-discord-gray/20 rounded-md">

@@ -6,11 +6,15 @@ import TopBar from './TopBar';
 const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
 	return (
 		<main className="flex">
-			<SideBar />
-			<section className="grid grid-cols-6 flex-grow">
+			<section>
+				<SideBar />
+			</section>
+			<section className="flex flex-col flex-grow">
 				<TopBar />
-				<InnerBar />
-				<div className="col-start-2 col-end-7 p-2">{children}</div>
+				<div className="flex flex-grow">
+					<InnerBar />
+					<div className="p-2">{children}</div>
+				</div>
 			</section>
 		</main>
 	);

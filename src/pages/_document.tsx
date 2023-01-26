@@ -6,6 +6,7 @@ export default function Document() {
 			<Head />
 			<body>
 				<Main />
+				<div id="portal" className="z-[9999]" />
 				<NextScript />
 			</body>
 		</Html>

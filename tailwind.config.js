@@ -13,6 +13,7 @@ module.exports = {
 			'discord-sidebar': '#2F3136',
 			'discord-user-background': '#292b2f',
 			black: '#000000',
+			transparent: 'transparent',
 		},
 		extend: {},
 	},

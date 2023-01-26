@@ -1,4 +1,5 @@
 import Guild from '@/components/Guild';
+import Tooltip from '@/components/Tooltip';
 import { FaDiscord } from 'react-icons/fa';
 
 const generateRandomName = () => {
@@ -25,15 +26,19 @@ const generateRandomName = () => {
 const SideBar = () => {
 	return (
 		<nav
-			className="w-[72px] shadow-lg bg-discord-dark h-screen flex-shrink-0 overflow-y-scroll flex flex-col gap-2 py-3"
+			className="w-[72px] shadow-lg bg-discord-dark h-screen flex-shrink-0 flex flex-col gap-2 py-3 select-none overflow-y-scroll overflow-x-visible z-[999]"
 			style={{ scrollbarWidth: 'none' }}
 		>
-			<Guild active tooltip="Direct Messages" icon={<FaDiscord size={29} />} />
+			<Tooltip title="Direct Messages" direction="right">
+				<Guild active icon={<FaDiscord size={29} />} />
+			</Tooltip>
 			<div className="w-8 h-[3px] bg-discord-chat my-[1px] rounded-full mx-auto">
 				&nbsp;
 			</div>
 			{[...Array(15)].map((_, i) => (
-				<Guild key={i} tooltip={generateRandomName()} />
+				<Tooltip key={i} title={generateRandomName()} direction="right">
+					<Guild icon={generateRandomName()} />
+				</Tooltip>
 			))}
 		</nav>
 	);
