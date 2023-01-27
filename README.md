@@ -1,3 +1,14 @@
+<<<<<<< Updated upstream
+
+https://user-images.githubusercontent.com/69468436/215122829-f72bff23-aa96-4f25-a09e-fac3a9749f8a.mp4
+=======
+![preview](https://cdn.amog-us.club/firefox_PDEUVJdFU9.mp4)
+<video>
+
+  <source src="https://cdn.amog-us.club/firefox_PDEUVJdFU9.mp4">
+</video>
+>>>>>>> Stashed changes
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
