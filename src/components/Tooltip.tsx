@@ -1,5 +1,8 @@
-import { FC, ReactNode, useState } from 'react';
-import Portal from '../layouts/Portal';
+import React, { FC, ReactNode, useState } from 'react';
+import ggsans from '@/lib/fonts/ggsans';
+import dynamic from 'next/dynamic';
+
+const Portal = dynamic(() => import('@/layouts/Portal'));
 
 type TooltipProps = {
 	title: string;
@@ -25,7 +28,7 @@ const Tooltip: FC<TooltipProps> = ({ children, title, direction }) => {
 			break;
 		case 'top':
 			className =
-				'after:top-[100%] after:right-[40%] origin-bottom after:border-b-transparent after:border-r-transparent after:border-t-black after:border-l-transparent left-[50%] -translate-x-[30%]';
+				'after:top-[100%] after:right-[40%] origin-bottom after:border-b-transparent after:border-r-transparent after:border-t-black after:border-l-transparent left-[50%]';
 			break;
 		case 'bottom':
 			className =
@@ -34,32 +37,34 @@ const Tooltip: FC<TooltipProps> = ({ children, title, direction }) => {
 	}
 
 	return (
-		<div className="group z-[999]">
-			<Portal>
-				<span
-					style={{ left: coords.x, top: coords.y }}
-					className={`${className} z-[9999] text-sm after:absolute font-semibold w-auto min-w-max absolute rounded-md shadow-md m-2 p-2 flex justify-center items-center bg-black group-hover:scale-100 ${
-						open ? 'scale-100' : 'scale-0'
-					} transition-all after:border-[5px] after:border-solid after:content-['']`}
-				>
-					{title}
-				</span>
-			</Portal>
+		<>
 			<div
 				onMouseOver={(e) => {
 					const rect = e.currentTarget.getBoundingClientRect();
 					switch (direction) {
 						case 'left':
-							setCoords({ x: rect.x - rect.width, y: rect.y });
+							setCoords({
+								x: rect.x - rect.width,
+								y: rect.y,
+							});
 							break;
 						case 'right':
-							setCoords({ x: rect.x + rect.width, y: rect.y });
+							setCoords({
+								x: rect.x + rect.width,
+								y: rect.y,
+							});
 							break;
 						case 'top':
-							setCoords({ x: rect.x, y: rect.y - rect.height * 1.5 });
+							setCoords({
+								x: rect.x - rect.width / 2,
+								y: rect.y - rect.height * 1.5,
+							});
 							break;
 						case 'bottom':
-							setCoords({ x: rect.x, y: rect.y + rect.height });
+							setCoords({
+								x: rect.x - rect.width / 2,
+								y: rect.y + rect.height * 1.5,
+							});
 							break;
 					}
 					setOpen(true);
@@ -69,8 +74,18 @@ const Tooltip: FC<TooltipProps> = ({ children, title, direction }) => {
 				}}
 			>
 				{children}
+				{open && (
+					<Portal>
+						<span
+							style={{ left: coords.x, top: coords.y }}
+							className={`${className} ${ggsans.className} animate-pop-in text-discord-white/90 text-sm after:absolute font-semibold w-auto min-w-max absolute rounded-md shadow-md m-1 p-2 flex justify-center items-center bg-black transition-all after:border-[5px] after:border-solid after:content-['']`}
+						>
+							{title}
+						</span>
+					</Portal>
+				)}
 			</div>
-		</div>
+		</>
 	);
 };
 

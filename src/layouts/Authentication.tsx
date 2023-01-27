@@ -4,87 +4,175 @@ import SVGBackground from '@/components/SVGBackground';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Button from '../components/Button';
+import { Formik, FormikErrors } from 'formik';
+import { FC } from 'react';
+import { auth } from '@/lib/firebase';
+import { updateProfile } from 'firebase/auth';
+import {
+	signInWithEmailAndPassword,
+	createUserWithEmailAndPassword,
+} from 'firebase/auth';
+import generateDiscriminator from '@/lib/generateDiscriminator';
+
+interface FormValues {
+	email: string;
+	username?: string;
+	password: string;
+}
+
+// thanks copilot
+const months = [
+	{ label: 'January', value: '1' },
+	{ label: 'February', value: '2' },
+	{ label: 'March', value: '3' },
+	{ label: 'April', value: '4' },
+	{ label: 'May', value: '5' },
+	{ label: 'June', value: '6' },
+	{ label: 'July', value: '7' },
+	{ label: 'August', value: '8' },
+	{ label: 'September', value: '9' },
+	{ label: 'October', value: '10' },
+	{ label: 'November', value: '11' },
+	{ label: 'December', value: '12' },
+];
+
+interface Props {
+	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+}
+
+const Login: FC<Props> = ({ handleChange, handleBlur }) => {
+	return (
+		<>
+			<Input
+				onChange={handleChange}
+				onBlur={handleBlur}
+				id="email"
+				name="email"
+				label="Email or phone number"
+				required
+				aria-required
+			/>
+			<div className="w-full flex flex-col justify-center items-start gap-1">
+				<Input
+					onChange={handleChange}
+					onBlur={handleBlur}
+					id="password"
+					name="password"
+					label="Password"
+					type="password"
+					required
+					aria-required
+				/>
+				<Link passHref href="/forgot-password">
+					<p className="text-discord-link text-sm font-medium leading-4 text-right cursor-pointer hover:underline underline-offset-1">
+						Forgot your password?
+					</p>
+				</Link>
+			</div>
+		</>
+	);
+};
+
+const Register: FC<Props> = ({ handleChange, handleBlur }) => {
+	return (
+		<>
+			<Input
+				onChange={handleChange}
+				onBlur={handleBlur}
+				name="email"
+				label="Email"
+			/>
+			<Input
+				onChange={handleChange}
+				onBlur={handleBlur}
+				name="username"
+				label="Username"
+			/>
+			<Input
+				onChange={handleChange}
+				onBlur={handleBlur}
+				name="password"
+				label="Password"
+				type="password"
+			/>
+			<div className="flex items-end justify-between gap-2 w-full">
+				<Select
+					label="Date of birth"
+					placeholder="Day"
+					options={[...Array(31)].map((_, i) => ({
+						label: `${i + 1}`,
+						value: `${i + 1}`,
+					}))}
+				/>
+				<Select placeholder="Month" options={months} />
+				<Select
+					placeholder="Year"
+					options={[...Array(100)].map((_, i) => ({
+						label: `${new Date().getFullYear() - i}`,
+						value: `${new Date().getFullYear() - i}`,
+					}))}
+				/>
+			</div>
+		</>
+	);
+};
 
 const Authentication = () => {
 	const router = useRouter();
 	const type = router.pathname.split('/').pop();
-	let component: JSX.Element | null = null;
+	let Component: FC<Props>;
+	const initialValues: FormValues = {
+		email: '',
+		username: '',
+		password: '',
+	};
+
+	const handleSubmit = async (
+		values: FormValues,
+		setErrors: (errors: FormikErrors<FormValues>) => void
+	) => {
+		if (type === 'login') {
+			try {
+				await signInWithEmailAndPassword(auth, values.email, values.password);
+				router.push('/');
+			} catch (error) {
+				console.log(error);
+			}
+		} else {
+			try {
+				const data = await createUserWithEmailAndPassword(
+					auth,
+					values.email,
+					values.password
+				);
+				if (values.username && data?.user) {
+					await updateProfile(data.user, {
+						displayName: values.username + generateDiscriminator(),
+					});
+				}
+				router.push('/');
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
 
 	switch (type) {
 		case 'login':
-			component = (
-				<>
-					<Input label="Email or phone number" required aria-required />
-					<div className="w-full flex flex-col justify-center items-start gap-1">
-						<Input label="Password" type="password" required aria-required />
-						<Link passHref href="/forgot-password">
-							<p className="text-discord-link text-sm font-medium leading-4 text-right cursor-pointer hover:underline">
-								Forgot your password?
-							</p>
-						</Link>
-					</div>
-				</>
-			);
+			Component = Login;
 			break;
 		case 'register':
-			component = (
-				<>
-					<Input label="Email" />
-					<Input label="Username" />
-					<Input label="Password" type="password" />
-					<div className="flex items-end justify-between gap-2 w-full">
-						<Select
-							label="Date of birth"
-							placeholder="Day"
-							options={[
-								{
-									label: 'January',
-									value: 'january',
-								},
-								{
-									label: 'February',
-									value: 'february',
-								},
-							]}
-						/>
-						<Select
-							placeholder="Month"
-							options={[
-								{
-									label: 'January',
-									value: 'january',
-								},
-								{
-									label: 'February',
-									value: 'february',
-								},
-							]}
-						/>
-						<Select
-							placeholder="Year"
-							options={[
-								{
-									label: 'January',
-									value: 'january',
-								},
-								{
-									label: 'February',
-									value: 'february',
-								},
-							]}
-						/>
-					</div>
-				</>
-			);
+			Component = Register;
 			break;
 	}
 
 	return (
 		<div className="flex justify-center items-center w-screen h-screen">
 			<SVGBackground />
-			<div className="animate-discord-bounce w-full bg-transparent lg:h-auto md:h-auto sm:h-auto lg:w-[520px] md:w-[500px] sm:w-[480px] p-8 mx-auto lg:bg-discord-black md:bg-discord-black sm:bg-discord-black rounded-md absolute">
+			<div className="motion-safe:animate-discord-bounce w-full bg-discord-chat lg:h-auto md:h-auto sm:h-auto lg:w-[520px] md:w-[500px] sm:w-[480px] p-8 mx-auto  rounded-md absolute select-none">
 				<div className="flex flex-col items-center justify-center w-full h-full gap-6">
-					<div className="text-center select-none space-y-2">
+					<div className="text-center space-y-2">
 						<h6 className="font-semibold text-2xl">
 							{type === 'register' ? 'Create an account' : 'Welcome back!'}
 						</h6>
@@ -92,29 +180,48 @@ const Authentication = () => {
 							{type === 'login' && "We're so excited to see you again!"}
 						</p>
 					</div>
-					{component}
-					<div className="flex flex-col w-full gap-1">
-						<Button fullWidth>
-							<span className="text-white text-base font-medium">
-								{type === 'login' ? 'Log In' : 'Continue'}
-							</span>
-						</Button>
-						<div className="flex-grow flex gap-1 items-center">
-							{type === 'login' && (
-								<p className="text-discord-dimmed text-sm font-medium leading-4">
-									Need an account?
-								</p>
-							)}
-							<Link
-								passHref
-								href={`/${type === 'login' ? 'register' : 'login'}`}
+					<Formik
+						initialValues={initialValues}
+						onSubmit={(values, { setErrors }) =>
+							handleSubmit(values, setErrors)
+						}
+					>
+						{({ handleSubmit, handleChange, handleBlur }) => (
+							<form
+								onSubmit={handleSubmit}
+								className="flex flex-col items-center justify-center w-full h-full gap-6"
 							>
-								<span className="text-discord-link hover:underline text-sm font-medium leading-4">
-									{type === 'login' ? 'Register' : 'Already have an account?'}
-								</span>
-							</Link>
-						</div>
-					</div>
+								<Component
+									handleChange={handleChange}
+									handleBlur={handleBlur}
+								/>
+								<div className="flex flex-col w-full gap-1">
+									<Button fullWidth type="submit">
+										<span className="text-white text-base font-medium">
+											{type === 'login' ? 'Log In' : 'Continue'}
+										</span>
+									</Button>
+									<div className="flex-grow flex gap-1 items-center">
+										{type === 'login' && (
+											<p className="text-discord-dimmed text-sm font-medium leading-4">
+												Need an account?
+											</p>
+										)}
+										<Link
+											passHref
+											href={`/${type === 'login' ? 'register' : 'login'}`}
+										>
+											<span className="text-discord-link hover:underline text-sm font-medium leading-4 underline-offset-1">
+												{type === 'login'
+													? 'Register'
+													: 'Already have an account?'}
+											</span>
+										</Link>
+									</div>
+								</div>
+							</form>
+						)}
+					</Formik>
 				</div>
 			</div>
 		</div>

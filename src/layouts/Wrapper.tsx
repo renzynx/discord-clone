@@ -1,28 +1,48 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 import InnerBar from './InnerBar';
 import SideBar from './SideBar';
 import TopBar from './TopBar';
-import { FirestoreProvider, useFirebaseApp } from 'reactfire';
-import { getFirestore } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import router from 'next/router';
+import useUserStore from '@/store/user';
 
 const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
-	const firestore = getFirestore(useFirebaseApp());
+	const setUser = useUserStore((state) => state.setUser);
+	const setLoading = useUserStore((state) => state.setLoading);
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, (user) => {
+			if (!user) {
+				router.push('/login');
+			} else {
+				setUser({
+					uid: user.uid,
+					email: user.email,
+					displayName: user.displayName,
+					photoURL: user.photoURL,
+				});
+			}
+		});
+
+		setLoading(false);
+
+		return () => unsubscribe();
+	}, [setLoading, setUser]);
 
 	return (
-		<FirestoreProvider sdk={firestore}>
-			<main className="flex">
-				<section>
-					<SideBar />
-				</section>
-				<section className="flex flex-col flex-grow">
-					<TopBar />
-					<div className="flex flex-grow">
-						<InnerBar />
-						<div className="p-2">{children}</div>
-					</div>
-				</section>
-			</main>
-		</FirestoreProvider>
+		<div className="flex">
+			<section>
+				<SideBar />
+			</section>
+			<section className="flex flex-col flex-grow">
+				<TopBar />
+				<div className="flex flex-grow">
+					<InnerBar />
+					<div className="p-2">{children}</div>
+				</div>
+			</section>
+		</div>
 	);
 };
 

@@ -9,6 +9,7 @@ const Input: FC<InputProps> = ({ label, ...props }) => {
 		<div className="w-full">
 			<label className="block text-[12px] tracking-[.02em]  leading-[16px] mb-2 font-bold text-discord-input-label select-none uppercase">
 				{label}
+				{props.required && <span className="text-discord-red ml-1">*</span>}
 			</label>
 			<input
 				{...props}

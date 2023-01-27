@@ -2,51 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.amog-us.club/fonts/Regular.woff') format('woff');
-	font-weight: 400;
-}
-
-@font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.amog-us.club/fonts/Medium.woff') format('woff');
-	font-weight: 500;
-}
-
-@font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.amog-us.club/fonts/Semibold.woff') format('woff');
-	font-weight: 600;
-}
-
-@font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.amog-us.club/fonts/Bold.woff') format('woff');
-	font-weight: 700;
-} */
-
-@font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.skyra.pw/whitney-font/v2/Book.woff') format('woff');
-	font-weight: 400;
-}
-@font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.skyra.pw/whitney-font/v2/Medium.woff') format('woff');
-	font-weight: 500;
-}
-@font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.skyra.pw/whitney-font/v2/Semibold.woff') format('woff');
-	font-weight: 600;
-}
-@font-face {
-	font-family: 'Whitney';
-	src: url('https://cdn.skyra.pw/whitney-font/v2/Bold.woff') format('woff');
-	font-weight: 700;
-}
-
 * {
 	box-sizing: border-box;
 }
@@ -55,11 +10,6 @@ html,
 body {
 	margin: 0;
 	padding: 0;
-	background-color: #36393f;
-	color: #fff;
-	font-family: Whitney, 'Source Sans Pro', ui-sans-serif, system-ui,
-		-apple-system, 'system-ui', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif,
-		'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
 a,

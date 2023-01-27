@@ -10,11 +10,10 @@ const Guild: FC<GuildProps> = ({ active, icon, iconURL, ...props }) => {
 	return (
 		<div {...props} className="w-full flex justify-center relative group">
 			<div
-				className={`${
-					active
-						? 'h-10 top-1'
-						: 'h-2 top-5 group-hover:h-5 group-hover:top-3 transition-all'
-				} absolute left-0 bg-discord-white w-1 rounded-r-lg`}
+				className={`absolute transition-all duration-300 left-0 bg-discord-white w-1 rounded-r-lg -translate-y-[50%] top-[50%] ${
+					active ? 'h-10' : 'h-2 group-hover:h-5'
+				} 
+				`}
 			/>
 			<div
 				className={`w-12 h-12 rounded-3xl flex justify-center items-center hover:rounded-xl hover:bg-discord-blurple duration-200 ease-linear transition-all overflow-hidden cursor-pointer ${

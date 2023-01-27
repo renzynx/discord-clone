@@ -5,12 +5,13 @@ type ButtonProps = {
 	fullWidth?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-const Button: FC<ButtonProps> = ({ children, fullWidth }) => {
+const Button: FC<ButtonProps> = ({ children, fullWidth, ...props }) => {
 	return (
 		<button
+			{...props}
 			className={`bg-discord-blurple ${
 				fullWidth && 'flex-grow w-full'
-			} py-[10px] px-1 rounded-sm hover:bg-discord-blurple/60 transition-all`}
+			} py-[10px] px-1 rounded-sm hover:bg-discord-blurple/60 transition-all text-ellipsis`}
 		>
 			{children}
 		</button>
