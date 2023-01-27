@@ -1,4 +1,4 @@
-import Guild from '@/components/Guild';
+import Guild from '@/layouts/Guild';
 import Tooltip from '@/components/Tooltip';
 import { FaDiscord } from 'react-icons/fa';
 

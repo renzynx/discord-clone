@@ -12,10 +12,31 @@ module.exports = {
 			'discord-chat': '#36393F',
 			'discord-sidebar': '#2F3136',
 			'discord-user-background': '#292b2f',
+			'discord-dimmed': '#a3a6aa',
+			'discord-input-background': '#202225',
+			'discord-input-label': '#b9bbbe',
+			'discord-link': '#00aff4',
 			black: '#000000',
 			transparent: 'transparent',
 		},
-		extend: {},
+		animation: {
+			'discord-bounce': 'discord-bounce .25s ease-in-out',
+		},
+		extend: {
+			keyframes: {
+				'discord-bounce': {
+					'0%': {
+						transform: 'scale(1) translateY(0) translateZ(0)',
+					},
+					'50%': {
+						transform: 'scale(1.05) translateY(-70px) translateZ(0)',
+					},
+					'100%': {
+						transform: 'scale(1) translateY(0) translateZ(0)',
+					},
+				},
+			},
+		},
 	},
-	plugins: [],
+	plugins: [require('@tailwindcss/forms')],
 };

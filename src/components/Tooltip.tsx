@@ -1,5 +1,5 @@
 import { FC, ReactNode, useState } from 'react';
-import Portal from './Portal';
+import Portal from '../layouts/Portal';
 
 type TooltipProps = {
 	title: string;
