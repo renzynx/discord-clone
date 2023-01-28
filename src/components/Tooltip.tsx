@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useState } from 'react';
 import ggsans from '@/lib/fonts/ggsans';
 import dynamic from 'next/dynamic';
 
-const Portal = dynamic(() => import('@/layouts/Portal'));
+const Portal = dynamic(() => import('@/layouts/Portal'), { ssr: false });
 
 type TooltipProps = {
 	title: string;
@@ -24,7 +24,7 @@ const Tooltip: FC<TooltipProps> = ({ children, title, direction }) => {
 			break;
 		case 'right':
 			className =
-				'after:right-[100%] after:top-[40%] left-16 origin-left after:border-t-transparent after:border-black after:border-b-transparent after:border-l-transparent';
+				'after:right-[100%] after:top-[40%] left-16 origin-left after:border-t-transparent after:border-r-black after:border-b-transparent after:border-l-transparent';
 			break;
 		case 'top':
 			className =

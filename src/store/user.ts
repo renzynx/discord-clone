@@ -2,12 +2,10 @@ import { create } from 'zustand';
 import { User } from 'firebase/auth';
 
 interface UserState {
-	user: {
-		uid: User['uid'];
-		email: User['email'];
-		displayName: User['displayName'];
-		photoURL: User['photoURL'];
-	} | null;
+	user: Pick<
+		User,
+		'displayName' | 'email' | 'emailVerified' | 'photoURL' | 'uid'
+	> | null;
 	loading: boolean;
 	setUser: (user: UserState['user']) => void;
 	setLoading: (loading: UserState['loading']) => void;

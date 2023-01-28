@@ -6,10 +6,14 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/lib/firebase';
 import router from 'next/router';
 import useUserStore from '@/store/user';
+import dynamic from 'next/dynamic';
+
+const LoadingScreen = dynamic(() => import('@/layouts/LoadingScreen'), {
+	ssr: false,
+});
 
 const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
-	const setUser = useUserStore((state) => state.setUser);
-	const setLoading = useUserStore((state) => state.setLoading);
+	const { setUser, setLoading, loading, user } = useUserStore((state) => state);
 
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -21,6 +25,7 @@ const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
 					email: user.email,
 					displayName: user.displayName,
 					photoURL: user.photoURL,
+					emailVerified: user.emailVerified,
 				});
 			}
 		});
@@ -30,7 +35,9 @@ const Wrapper: FC<{ children: ReactNode }> = ({ children }) => {
 		return () => unsubscribe();
 	}, [setLoading, setUser]);
 
-	return (
+	return loading || !user ? (
+		<LoadingScreen />
+	) : (
 		<div className="flex">
 			<section>
 				<SideBar />

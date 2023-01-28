@@ -6,17 +6,25 @@ import { useRouter } from 'next/router';
 import Button from '../components/Button';
 import { Formik, FormikErrors } from 'formik';
 import { FC } from 'react';
-import { auth } from '@/lib/firebase';
+import { auth, db } from '@/lib/firebase';
 import { updateProfile } from 'firebase/auth';
 import {
 	signInWithEmailAndPassword,
 	createUserWithEmailAndPassword,
 } from 'firebase/auth';
-import generateDiscriminator from '@/lib/generateDiscriminator';
+import {
+	addDoc,
+	collection,
+	doc,
+	documentId,
+	setDoc,
+	updateDoc,
+} from 'firebase/firestore';
+import generateDiscriminator from '@/lib/functions/generateDiscriminator';
 
 interface FormValues {
 	email: string;
-	username?: string;
+	username: string;
 	password: string;
 }
 
@@ -146,14 +154,22 @@ const Authentication = () => {
 					values.email,
 					values.password
 				);
-				if (values.username && data?.user) {
-					await updateProfile(data.user, {
-						displayName: values.username + generateDiscriminator(),
-					});
+				if (data?.user) {
+					await Promise.all([
+						updateProfile(data.user, {
+							displayName: values.username + generateDiscriminator(),
+							photoURL: `https://api.dicebear.com/5.x/identicon/svg?seed=${data.user.uid}`,
+						}),
+						setDoc(doc(db, 'users', data.user.uid), {
+							guilds: [],
+						}),
+					]);
+					router.push('/');
+				} else {
+					setErrors({ email: 'Email already in use' });
 				}
-				router.push('/');
 			} catch (error) {
-				console.log(error);
+				console.table(error);
 			}
 		}
 	};
