@@ -2,7 +2,7 @@ import React, { FC, ReactNode, useState } from 'react';
 import ggsans from '@/lib/fonts/ggsans';
 import dynamic from 'next/dynamic';
 
-const Portal = dynamic(() => import('@/layouts/Portal'), { ssr: false });
+const Portal = dynamic(() => import('@/components/Portal'), { ssr: false });
 
 type TooltipProps = {
 	title: string;

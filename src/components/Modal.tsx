@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import Portal from '@/layouts/Portal';
+import Portal from '@/components/Portal';
 import ggsans from '@/lib/fonts/ggsans';
 
 type ModalProps = {
@@ -14,7 +14,7 @@ const Modal: FC<ModalProps> = ({ children, open, onClose }) => {
 			<div className="w-screen h-screen bg-black opacity-80 absolute inset-0"></div>
 
 			<div
-				className={`${ggsans.className} absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-[440px] h-[558px] flex flex-col bg-discord-dark text-white rounded-md shadow-md`}
+				className={`${ggsans.className} absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 w-[440px] h-fit flex flex-col bg-discord-chat text-white rounded-md shadow-md`}
 			>
 				<div className="flex-grow flex justify-end mt-3">
 					<button

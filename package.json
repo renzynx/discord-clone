@@ -10,19 +10,22 @@
   },
   "dependencies": {
     "@next/font": "13.1.5",
+    "@supabase/auth-helpers-nextjs": "^0.5.4",
+    "@supabase/auth-helpers-react": "^0.3.1",
+    "@supabase/supabase-js": "^2.7.1",
     "@tailwindcss/forms": "^0.5.3",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "eslint": "8.32.0",
     "eslint-config-next": "13.1.5",
-    "firebase": "^9.16.0",
     "formik": "^2.2.9",
     "next": "13.1.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "typescript": "4.9.4",
+    "yup": "^0.32.11",
     "zustand": "^4.3.2"
   },
   "devDependencies": {

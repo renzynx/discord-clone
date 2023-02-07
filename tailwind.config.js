@@ -21,6 +21,7 @@ module.exports = {
 				'discord-link': '#00aff4',
 				'discord-red': '#ed4245',
 				'discord-green': '#3ba55d',
+				'discord-btn-success': '#2d7d46',
 				black: '#000000',
 				transparent: 'transparent',
 			},

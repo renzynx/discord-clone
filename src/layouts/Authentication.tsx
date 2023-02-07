@@ -6,21 +6,10 @@ import { useRouter } from 'next/router';
 import Button from '../components/Button';
 import { Formik, FormikErrors } from 'formik';
 import { FC } from 'react';
-import { auth, db } from '@/lib/firebase';
-import { updateProfile } from 'firebase/auth';
-import {
-	signInWithEmailAndPassword,
-	createUserWithEmailAndPassword,
-} from 'firebase/auth';
-import {
-	addDoc,
-	collection,
-	doc,
-	documentId,
-	setDoc,
-	updateDoc,
-} from 'firebase/firestore';
 import generateDiscriminator from '@/lib/functions/generateDiscriminator';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import LoginSchema from '@/lib/schemas/login';
+import RegisterSchema from '@/lib/schemas/register';
 
 interface FormValues {
 	email: string;
@@ -47,9 +36,10 @@ const months = [
 interface Props {
 	handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
+	errors: FormikErrors<FormValues>;
 }
 
-const Login: FC<Props> = ({ handleChange, handleBlur }) => {
+const Login: FC<Props> = ({ handleChange, handleBlur, errors }) => {
 	return (
 		<>
 			<Input
@@ -60,6 +50,7 @@ const Login: FC<Props> = ({ handleChange, handleBlur }) => {
 				label="Email or phone number"
 				required
 				aria-required
+				error={errors.email}
 			/>
 			<div className="w-full flex flex-col justify-center items-start gap-1">
 				<Input
@@ -71,6 +62,7 @@ const Login: FC<Props> = ({ handleChange, handleBlur }) => {
 					type="password"
 					required
 					aria-required
+					error={errors.password}
 				/>
 				<Link passHref href="/forgot-password">
 					<p className="text-discord-link text-sm font-medium leading-4 text-right cursor-pointer hover:underline underline-offset-1">
@@ -82,7 +74,7 @@ const Login: FC<Props> = ({ handleChange, handleBlur }) => {
 	);
 };
 
-const Register: FC<Props> = ({ handleChange, handleBlur }) => {
+const Register: FC<Props> = ({ handleChange, handleBlur, errors }) => {
 	return (
 		<>
 			<Input
@@ -90,12 +82,14 @@ const Register: FC<Props> = ({ handleChange, handleBlur }) => {
 				onBlur={handleBlur}
 				name="email"
 				label="Email"
+				error={errors.email}
 			/>
 			<Input
 				onChange={handleChange}
 				onBlur={handleBlur}
 				name="username"
 				label="Username"
+				error={errors.username}
 			/>
 			<Input
 				onChange={handleChange}
@@ -103,6 +97,7 @@ const Register: FC<Props> = ({ handleChange, handleBlur }) => {
 				name="password"
 				label="Password"
 				type="password"
+				error={errors.password}
 			/>
 			<div className="flex items-end justify-between gap-2 w-full">
 				<Select
@@ -128,6 +123,7 @@ const Register: FC<Props> = ({ handleChange, handleBlur }) => {
 
 const Authentication = () => {
 	const router = useRouter();
+	const supabase = useSupabaseClient();
 	const type = router.pathname.split('/').pop();
 	let Component: FC<Props>;
 	const initialValues: FormValues = {
@@ -140,37 +136,36 @@ const Authentication = () => {
 		values: FormValues,
 		setErrors: (errors: FormikErrors<FormValues>) => void
 	) => {
+		const { error } =
+			type === 'login'
+				? await supabase.auth.signInWithPassword(values)
+				: await supabase.auth.signUp({
+						...values,
+						options: {
+							data: {
+								username: values.username,
+								discriminator: generateDiscriminator(),
+							},
+							emailRedirectTo: 'http://localhost:3000/verify',
+						},
+				  });
+
+		if (error) {
+			setErrors({
+				email: error.message,
+				username: error.message,
+				password: error.message,
+			});
+			return;
+		}
+
+		if (type === 'register') {
+			localStorage.setItem('email', values.email);
+			router.push('/verify');
+		}
+
 		if (type === 'login') {
-			try {
-				await signInWithEmailAndPassword(auth, values.email, values.password);
-				router.push('/');
-			} catch (error) {
-				console.log(error);
-			}
-		} else {
-			try {
-				const data = await createUserWithEmailAndPassword(
-					auth,
-					values.email,
-					values.password
-				);
-				if (data?.user) {
-					await Promise.all([
-						updateProfile(data.user, {
-							displayName: values.username + generateDiscriminator(),
-							photoURL: `https://api.dicebear.com/5.x/identicon/svg?seed=${data.user.uid}`,
-						}),
-						setDoc(doc(db, 'users', data.user.uid), {
-							guilds: [],
-						}),
-					]);
-					router.push('/');
-				} else {
-					setErrors({ email: 'Email already in use' });
-				}
-			} catch (error) {
-				console.table(error);
-			}
+			router.push('/');
 		}
 	};
 
@@ -201,8 +196,9 @@ const Authentication = () => {
 						onSubmit={(values, { setErrors }) =>
 							handleSubmit(values, setErrors)
 						}
+						validationSchema={type === 'login' ? LoginSchema : RegisterSchema}
 					>
-						{({ handleSubmit, handleChange, handleBlur }) => (
+						{({ handleSubmit, handleChange, handleBlur, errors }) => (
 							<form
 								onSubmit={handleSubmit}
 								className="flex flex-col items-center justify-center w-full h-full gap-6"
@@ -210,6 +206,7 @@ const Authentication = () => {
 								<Component
 									handleChange={handleChange}
 									handleBlur={handleBlur}
+									errors={errors}
 								/>
 								<div className="flex flex-col w-full gap-1">
 									<Button fullWidth type="submit">

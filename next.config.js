@@ -6,6 +6,15 @@ const nextConfig = {
 		dangerouslyAllowSVG: true,
 		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
 	},
+	redirects: async () => {
+		return [
+			{
+				source: '/',
+				destination: '/channels/@me',
+				permanent: true,
+			},
+		];
+	},
 };
 
 module.exports = nextConfig;

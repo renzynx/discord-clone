@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 
-import useUserStore from '@/store/user';
+import useAuthStore from '@/stores/auth.store';
 import Image from 'next/image';
 import { BsHeadphones } from 'react-icons/bs';
 import { FaMicrophone } from 'react-icons/fa';
@@ -9,8 +9,8 @@ import { FiSettings } from 'react-icons/fi';
 import Tooltip from '../components/Tooltip';
 
 const UserMenu = () => {
-	const user = useUserStore((state) => state.user);
-	const loading = useUserStore((state) => state.loading);
+	const user = useAuthStore((state) => state.user);
+	const loading = useAuthStore((state) => state.loading);
 
 	return (
 		<section className="bg-discord-user-background h-14 p-2 w-full flex items-center">
@@ -19,10 +19,7 @@ const UserMenu = () => {
 					<div className="animate-pulse rounded-full w-[32px] h-[32px] bg-discord-gray/20" />
 				) : (
 					<Image
-						src={
-							user?.photoURL ??
-							`https://api.dicebear.com/5.x/identicon/svg?seed=${user.uid}`
-						}
+						src={`https://api.dicebear.com/5.x/identicon/svg?seed=${user.id}`}
 						width={32}
 						height={32}
 						alt="User Avatar"
@@ -38,11 +35,9 @@ const UserMenu = () => {
 						</>
 					) : (
 						<>
-							<p className="font-semibold text-sm break-all">
-								{user?.displayName?.split('#').shift()}
-							</p>
+							<p className="font-semibold text-sm break-all">{user.username}</p>
 							<p className="text-discord-gray text-[11px] -mt-[2px]">
-								#{user?.displayName?.split('#').pop()}
+								{user.discriminator}
 							</p>
 						</>
 					)}

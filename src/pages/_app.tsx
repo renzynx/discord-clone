@@ -1,15 +1,37 @@
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
-import Wrapper from '@/layouts/Wrapper';
 import Head from 'next/head';
-import { firebaseConfig } from '@/lib/firebase';
 import ggsans from '@/lib/fonts/ggsans';
+import { ReactNode } from 'react';
+import {
+	createBrowserSupabaseClient,
+	Session,
+} from '@supabase/auth-helpers-nextjs';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { useState } from 'react';
+import RootLayout from '@/layouts/RootLayout';
+import { Database } from '@/generated/supabase';
 
-export default function App({
-	Component,
-	pageProps,
-}: AppProps & { Component: { layout: boolean } }) {
+type CustomApp = AppProps<{ initialSession: Session }> & {
+	Component: { layout: boolean };
+};
+
+const className = `${ggsans.variable} font-sans bg-discord-chat text-discord-white`;
+
+export default function App({ Component, pageProps }: CustomApp) {
+	const [supabase] = useState(() => createBrowserSupabaseClient<Database>());
 	const layout = (Component.layout ??= true);
+	let item: ReactNode;
+
+	if (layout) {
+		item = (
+			<RootLayout>
+				<Component {...pageProps} />
+			</RootLayout>
+		);
+	} else {
+		item = <Component {...pageProps} />;
+	}
 
 	return (
 		<>
@@ -19,17 +41,12 @@ export default function App({
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
-			<main
-				className={`bg-discord-chat text-discord-white ${ggsans.variable} font-sans`}
+			<SessionContextProvider
+				supabaseClient={supabase}
+				initialSession={pageProps.initialSession}
 			>
-				{layout ? (
-					<Wrapper>
-						<Component {...pageProps} />
-					</Wrapper>
-				) : (
-					<Component {...pageProps} />
-				)}
-			</main>
+				<main className={className}>{item}</main>
+			</SessionContextProvider>
 		</>
 	);
 }
