@@ -11,7 +11,7 @@ const nextConfig = {
 			{
 				source: '/',
 				destination: '/channels/@me',
-				permanent: true,
+				permanent: false,
 			},
 		];
 	},

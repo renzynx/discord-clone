@@ -21,12 +21,15 @@ const TopBar = () => {
 
 				<div className="flex items-center gap-8">
 					{items.map((item, i) => (
-						<p key={i} className="text-discord-dimmed font-medium">
+						<p
+							key={i}
+							className="text-discord-dimmed font-medium cursor-pointer hover:text-discord-white"
+						>
 							{item}
 						</p>
 					))}
 
-					<Button className="px-0 py-0 max-h-[2px] font-medium" color="success">
+					<Button compact className="font-medium p-0" color="success">
 						Add Friend
 					</Button>
 				</div>

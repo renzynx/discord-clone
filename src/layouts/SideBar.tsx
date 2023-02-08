@@ -1,42 +1,22 @@
 import Tooltip from '@/components/Tooltip';
 import useAuthStore from '@/stores/auth.store';
-import Guild from './Guild';
 import { useEffect, useState } from 'react';
 import { FaDiscord } from 'react-icons/fa';
 import { BsPlus } from 'react-icons/bs';
-import CreateServerModal from './CreateServerModal';
+import CreateServerModal from '@/components/CreateServerModal';
 import useSupabase from '@/hooks/useSupabase';
 import { Database } from '@/generated/supabase';
-
-const generateRandomName = () => {
-	const names = [
-		'hello',
-		'world',
-		'foo',
-		'bar',
-		'baz',
-		'qux',
-		'quux',
-		'corge',
-		'grault',
-		'garply',
-		'waldo',
-		'fred',
-		'plugh',
-		'xyzzy',
-		'thud',
-	];
-	return names[Math.floor(Math.random() * names.length)];
-};
+import Guild from '../components/Guild';
 
 type GuildType = Database['public']['Tables']['guilds']['Row'];
 
 const SideBar = () => {
 	const loading = useAuthStore((state) => state.loading);
 	const user = useAuthStore((state) => state.user);
-	const [guilds, setGuilds] = useState<GuildType[]>([]);
+	const [guilds, setGuilds] = useState<{ guilds: GuildType }[]>([]);
 	const [open, setOpen] = useState(false);
 	const supabase = useSupabase();
+	const [fetching, setFetching] = useState(true);
 
 	useEffect(() => {
 		if (!user || loading) {
@@ -44,15 +24,25 @@ const SideBar = () => {
 		}
 
 		supabase
-			.from('guilds')
-			.select('*')
-			.eq('owner_id', user.id)
+			.from('members')
+			.select(
+				`
+				guilds (
+					id,
+					name,
+					icon_url
+				)
+				`
+			)
+			.eq('user_id', user.id)
 			.then(({ data, error }) => {
-				if (error) {
-					console.error(error);
-				} else {
-					setGuilds(data!);
+				if (error || !data) {
+					return;
 				}
+
+				setGuilds(data as unknown as any);
+
+				setFetching(false);
 			});
 	}, [loading, supabase, user]);
 
@@ -75,11 +65,13 @@ const SideBar = () => {
 			<div className="w-8 h-[3px] bg-discord-chat my-[1px] rounded-full mx-auto">
 				&nbsp;
 			</div>
-			{guilds.map((guild, i) => (
-				<Tooltip key={i} title={guild.name} direction="right">
-					<Guild icon={guild.name} iconURL={guild.icon_url!} />
-				</Tooltip>
-			))}
+			{fetching
+				? 'fetching...'
+				: guilds.map(({ guilds: guild }, i) => (
+						<Tooltip key={i} title={guild.name} direction="right">
+							<Guild icon={guild.name} iconURL={guild.icon_url} />
+						</Tooltip>
+				  ))}
 			<CreateServerModal
 				onClose={close}
 				open={open}

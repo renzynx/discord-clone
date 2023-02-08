@@ -20,7 +20,7 @@ const RootLayout: FC<{ children: ReactNode }> = ({ children }) => {
 		supabase.auth
 			.getSession()
 			.then(({ data, error }) => {
-				if (error) {
+				if (error || !data) {
 					router.push('/login');
 					return;
 				}
@@ -28,13 +28,12 @@ const RootLayout: FC<{ children: ReactNode }> = ({ children }) => {
 				supabase
 					.from('profiles')
 					.select('*')
-					.eq('id', data?.session?.user?.id)
+					.eq('id', data.session?.user?.id)
 					.single()
 					.then(({ data, error }) => {
 						if (!data || error) {
 							router.push('/login');
 						} else {
-							console.log(data);
 							setUser(data);
 						}
 					});
