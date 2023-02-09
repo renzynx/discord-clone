@@ -1,0 +1,11 @@
+query GetProfile($id: UUID) {
+	profilesCollection(filter: { id: { eq: $id } }) {
+		edges {
+			node {
+				id
+				username
+				avatar_url
+			}
+		}
+	}
+}

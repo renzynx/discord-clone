@@ -1,0 +1,620 @@
+scalar BigInt
+
+"""
+Boolean expression comparing fields on type "BigInt"
+"""
+input BigIntFilter {
+  eq: BigInt
+  gt: BigInt
+  gte: BigInt
+  in: [BigInt!]
+  is: FilterIs
+  lt: BigInt
+  lte: BigInt
+  neq: BigInt
+}
+
+"""
+Boolean expression comparing fields on type "Boolean"
+"""
+input BooleanFilter {
+  eq: Boolean
+  gt: Boolean
+  gte: Boolean
+  in: [Boolean!]
+  is: FilterIs
+  lt: Boolean
+  lte: Boolean
+  neq: Boolean
+}
+
+scalar Cursor
+
+scalar Date
+
+"""
+Boolean expression comparing fields on type "Date"
+"""
+input DateFilter {
+  eq: Date
+  gt: Date
+  gte: Date
+  in: [Date!]
+  is: FilterIs
+  lt: Date
+  lte: Date
+  neq: Date
+}
+
+scalar Datetime
+
+"""
+Boolean expression comparing fields on type "Datetime"
+"""
+input DatetimeFilter {
+  eq: Datetime
+  gt: Datetime
+  gte: Datetime
+  in: [Datetime!]
+  is: FilterIs
+  lt: Datetime
+  lte: Datetime
+  neq: Datetime
+}
+
+enum FilterIs {
+  NULL
+  NOT_NULL
+}
+
+"""
+Boolean expression comparing fields on type "Float"
+"""
+input FloatFilter {
+  eq: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  is: FilterIs
+  lt: Float
+  lte: Float
+  neq: Float
+}
+
+"""
+Boolean expression comparing fields on type "ID"
+"""
+input IDFilter {
+  eq: ID
+}
+
+"""
+Boolean expression comparing fields on type "Int"
+"""
+input IntFilter {
+  eq: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  is: FilterIs
+  lt: Int
+  lte: Int
+  neq: Int
+}
+
+scalar JSON
+
+"""The root type for creating and mutating data"""
+type Mutation {
+  """Deletes zero or more records from the `guilds` collection"""
+  deleteFromguildsCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: guildsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): guildsDeleteResponse!
+
+  """Deletes zero or more records from the `members` collection"""
+  deleteFrommembersCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: membersFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): membersDeleteResponse!
+
+  """Deletes zero or more records from the `profiles` collection"""
+  deleteFromprofilesCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: profilesFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): profilesDeleteResponse!
+
+  """Adds one or more `guilds` records to the collection"""
+  insertIntoguildsCollection(objects: [guildsInsertInput!]!): guildsInsertResponse
+
+  """Adds one or more `members` records to the collection"""
+  insertIntomembersCollection(objects: [membersInsertInput!]!): membersInsertResponse
+
+  """Adds one or more `profiles` records to the collection"""
+  insertIntoprofilesCollection(objects: [profilesInsertInput!]!): profilesInsertResponse
+
+  """Updates zero or more records in the `guilds` collection"""
+  updateguildsCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: guildsUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: guildsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): guildsUpdateResponse!
+
+  """Updates zero or more records in the `members` collection"""
+  updatemembersCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: membersUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: membersFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): membersUpdateResponse!
+
+  """Updates zero or more records in the `profiles` collection"""
+  updateprofilesCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: profilesUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: profilesFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): profilesUpdateResponse!
+}
+
+interface Node {
+  """Retrieves a record by `ID`"""
+  nodeId: ID!
+}
+
+"""Defines a per-field sorting order"""
+enum OrderByDirection {
+  """Ascending order, nulls first"""
+  AscNullsFirst
+
+  """Ascending order, nulls last"""
+  AscNullsLast
+
+  """Descending order, nulls first"""
+  DescNullsFirst
+
+  """Descending order, nulls last"""
+  DescNullsLast
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+"""The root type for querying data"""
+type Query {
+  """A pagable collection of type `guilds`"""
+  guildsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: guildsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [guildsOrderBy!]
+  ): guildsConnection
+
+  """A pagable collection of type `members`"""
+  membersCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: membersFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [membersOrderBy!]
+  ): membersConnection
+
+  """Retrieve a record by its `ID`"""
+  node(
+    """The record's `ID`"""
+    nodeId: ID!
+  ): Node
+
+  """A pagable collection of type `profiles`"""
+  profilesCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: profilesFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [profilesOrderBy!]
+  ): profilesConnection
+}
+
+"""
+Boolean expression comparing fields on type "String"
+"""
+input StringFilter {
+  eq: String
+  gt: String
+  gte: String
+  in: [String!]
+  is: FilterIs
+  lt: String
+  lte: String
+  neq: String
+}
+
+scalar Time
+
+"""
+Boolean expression comparing fields on type "Time"
+"""
+input TimeFilter {
+  eq: Time
+  gt: Time
+  gte: Time
+  in: [Time!]
+  is: FilterIs
+  lt: Time
+  lte: Time
+  neq: Time
+}
+
+scalar UUID
+
+"""
+Boolean expression comparing fields on type "UUID"
+"""
+input UUIDFilter {
+  eq: UUID
+  in: [UUID!]
+  is: FilterIs
+  neq: UUID
+}
+
+type guilds implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: UUID!
+  created_at: Datetime
+  name: String!
+  icon_url: String
+  owner_id: UUID
+  profiles: profiles
+  membersCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: membersFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [membersOrderBy!]
+  ): membersConnection
+}
+
+type guildsConnection {
+  edges: [guildsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type guildsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [guilds!]!
+}
+
+type guildsEdge {
+  cursor: String!
+  node: guilds!
+}
+
+input guildsFilter {
+  id: UUIDFilter
+  created_at: DatetimeFilter
+  name: StringFilter
+  icon_url: StringFilter
+  owner_id: UUIDFilter
+  nodeId: IDFilter
+}
+
+input guildsInsertInput {
+  id: UUID
+  created_at: Datetime
+  name: String
+  icon_url: String
+  owner_id: UUID
+}
+
+type guildsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [guilds!]!
+}
+
+input guildsOrderBy {
+  id: OrderByDirection
+  created_at: OrderByDirection
+  name: OrderByDirection
+  icon_url: OrderByDirection
+  owner_id: OrderByDirection
+}
+
+input guildsUpdateInput {
+  id: UUID
+  created_at: Datetime
+  name: String
+  icon_url: String
+  owner_id: UUID
+}
+
+type guildsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [guilds!]!
+}
+
+type members implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: UUID!
+  guild_id: UUID
+  user_id: UUID
+  guilds: guilds
+  profiles: profiles
+}
+
+type membersConnection {
+  edges: [membersEdge!]!
+  pageInfo: PageInfo!
+}
+
+type membersDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [members!]!
+}
+
+type membersEdge {
+  cursor: String!
+  node: members!
+}
+
+input membersFilter {
+  id: UUIDFilter
+  guild_id: UUIDFilter
+  user_id: UUIDFilter
+  nodeId: IDFilter
+}
+
+input membersInsertInput {
+  id: UUID
+  guild_id: UUID
+  user_id: UUID
+}
+
+type membersInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [members!]!
+}
+
+input membersOrderBy {
+  id: OrderByDirection
+  guild_id: OrderByDirection
+  user_id: OrderByDirection
+}
+
+input membersUpdateInput {
+  id: UUID
+  guild_id: UUID
+  user_id: UUID
+}
+
+type membersUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [members!]!
+}
+
+type profiles implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: UUID!
+  updated_at: Datetime
+  username: String
+  discriminator: String
+  avatar_url: String
+  guildsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: guildsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [guildsOrderBy!]
+  ): guildsConnection
+  membersCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: membersFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [membersOrderBy!]
+  ): membersConnection
+}
+
+type profilesConnection {
+  edges: [profilesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type profilesDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [profiles!]!
+}
+
+type profilesEdge {
+  cursor: String!
+  node: profiles!
+}
+
+input profilesFilter {
+  id: UUIDFilter
+  updated_at: DatetimeFilter
+  username: StringFilter
+  discriminator: StringFilter
+  avatar_url: StringFilter
+  nodeId: IDFilter
+}
+
+input profilesInsertInput {
+  id: UUID
+  updated_at: Datetime
+  username: String
+  discriminator: String
+  avatar_url: String
+}
+
+type profilesInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [profiles!]!
+}
+
+input profilesOrderBy {
+  id: OrderByDirection
+  updated_at: OrderByDirection
+  username: OrderByDirection
+  discriminator: OrderByDirection
+  avatar_url: OrderByDirection
+}
+
+input profilesUpdateInput {
+  id: UUID
+  updated_at: Datetime
+  username: String
+  discriminator: String
+  avatar_url: String
+}
+
+type profilesUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [profiles!]!
+}

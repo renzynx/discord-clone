@@ -6,7 +6,7 @@ import { BsPlus } from 'react-icons/bs';
 import CreateServerModal from '@/components/CreateServerModal';
 import useSupabase from '@/hooks/useSupabase';
 import { Database } from '@/generated/supabase';
-import Guild from '../components/Guild';
+import Guild from '@/components/Guild';
 
 type GuildType = Database['public']['Tables']['guilds']['Row'];
 
