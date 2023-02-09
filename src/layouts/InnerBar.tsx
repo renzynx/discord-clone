@@ -1,5 +1,6 @@
 import IconFriend from '@/components/IconFriend';
 import IconNitro from '@/components/IconNitro';
+import { useGetProfileQuery } from '@/generated/graphql';
 import UserMenu from '@/layouts/UserMenu';
 import { useRouter } from 'next/router';
 

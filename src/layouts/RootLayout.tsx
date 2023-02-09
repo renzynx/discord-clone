@@ -1,11 +1,10 @@
-import { FC, ReactNode, useEffect } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import InnerBar from './InnerBar';
 import SideBar from './SideBar';
 import TopBar from './TopBar';
 import router from 'next/router';
 import dynamic from 'next/dynamic';
 import useAuthStore from '@/stores/auth.store';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import useSupabase from '@/hooks/useSupabase';
 
 const LoadingScreen = dynamic(() => import('@/components/LoadingScreen'), {
