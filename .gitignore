@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+/.yarn/*
+!/.yarn/releases
+!/.yarn/plugins
 
 # testing
 /coverage
@@ -37,3 +40,4 @@ yarn-error.log*
 next-env.d.ts
 
 .idea
+
